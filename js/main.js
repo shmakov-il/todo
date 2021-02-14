@@ -1,17 +1,22 @@
 'use strict';
 
-// Зададим переменные
 const todoControl = document.querySelector('.todo-control'),
       headerInput = document.querySelector('.header-input'),
       todoList = document.querySelector('.todo-list'),
       todoCompleted = document.querySelector('.todo-completed');
 
-// Создадим массив для хранения дел
-const todoData = [
+let todoData = [];
+if (localStorage.getItem('todo')){
+  todoData = JSON.parse(localStorage.getItem('todo'));
+}
 
-];
+const updateLocal = function () {
+  localStorage.setItem('todo', JSON.stringify(todoData));
+};
+const deleteLocal = function () {
+  localStorage.removeItem('todo');
+};
 
-// Создаем функцию render
 const render = function () {
   todoList.textContent = '';
   todoCompleted.textContent = '';
@@ -26,10 +31,8 @@ const render = function () {
 			'<button class="todo-complete"></button>' + 
     '</div>';
 
-    if (item.value === '' || !item.value.trim()) {
-      return;
-    }
-    
+    updateLocal();
+
     todoControl.reset();
 
     if (item.completed) {
@@ -52,33 +55,36 @@ const render = function () {
           return item.remove === true;
         });
         todoData.splice(todoData.indexOf(deleteElementArray), 1);
-        console.log(deleteElementArray);
         if (deleteElementArray.remove === true) {
-          console.log(0);
+          console.log('delete');
         } 
+        deleteLocal();
+        render();
     });
-    
-    
-
   });
 };
 
-// Обрабатываем форму
+
 todoControl.addEventListener('submit', function(event) {
   event.preventDefault();
-
+  
   const newTodo = {
     value: headerInput.value,
-    comleted: false,
+    completed: false,
     remove: false
   };
+    if (headerInput.value === '' || !headerInput.value.trim()) {
+      todoControl.disabled = true;
+      
+    } else {
+      todoControl.disabled = false;
+      todoData.push(newTodo);
 
-  todoData.push(newTodo);
-
-  render();
-});
-
-
+      render();
+    }
+    render();
+  });
 
 render();
+
 
