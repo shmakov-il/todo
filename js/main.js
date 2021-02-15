@@ -13,15 +13,15 @@ if (localStorage.getItem('todo')){
 const updateLocal = function () {
   localStorage.setItem('todo', JSON.stringify(todoData));
 };
-const deleteLocal = function () {
-  localStorage.removeItem('todo');
-};
+// const deleteLocal = function () {
+//   localStorage.removeItem('todo');
+// };
 
 const render = function () {
   todoList.textContent = '';
   todoCompleted.textContent = '';
 
-  todoData.forEach(function (item) {
+  todoData.forEach(function (item, index) {
     const newElement = document.createElement('li');
     newElement.classList.add('todo-item');
     newElement.innerHTML =
@@ -49,21 +49,17 @@ const render = function () {
 
     const buttonRemove = newElement.querySelector('.todo-remove');
     buttonRemove.addEventListener('click', function () {
-      item.remove = !item.remove;
+      // item.remove = !item.remove;
       
-        const deleteElementArray = todoData.find( function(item) {
-          return item.remove === true;
-        });
-        todoData.splice(todoData.indexOf(deleteElementArray), 1);
-        if (deleteElementArray.remove === true) {
-          console.log('delete');
-        } 
-        deleteLocal();
+        // const deleteElementArray = todoData.find( function(item) {
+        //   return item.remove === true;
+        // });
+        todoData.splice(index, 1);
+        updateLocal();
         render();
     });
   });
 };
-
 
 todoControl.addEventListener('submit', function(event) {
   event.preventDefault();
@@ -71,7 +67,7 @@ todoControl.addEventListener('submit', function(event) {
   const newTodo = {
     value: headerInput.value,
     completed: false,
-    remove: false
+    // remove: false
   };
     if (headerInput.value === '' || !headerInput.value.trim()) {
       todoControl.disabled = true;
